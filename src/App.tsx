@@ -35,7 +35,7 @@ const App: React.FC = () => {
     field: "actions",
     title: "Actions",
     width: "120px",
-    cell: (props: GridCellProps) => (
+    cells: (props: GridCellProps) => (
       <button
         className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
         onClick={() => {
