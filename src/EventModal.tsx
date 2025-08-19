@@ -36,6 +36,17 @@ export const EventModal: React.FC<EventModalProps> = ({
 
   const handleSave = () => {
     if (formData) {
+      // Validate required fields
+      if (
+        !formData.name ||
+        !formData.description ||
+        !formData.company ||
+        !formData.color
+      ) {
+        alert("Name, Description, Company, and Color are required.");
+        return;
+      }
+
       onSave(formData);
       setIsEditing(false);
     }
