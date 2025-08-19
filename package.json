@@ -1,0 +1,66 @@
+{
+  "name": "react-typescript",
+  "version": "1.0.0",
+  "description": "React and TypeScript example starter project",
+  "keywords": [
+    "typescript",
+    "react",
+    "starter"
+  ],
+  "main": "src/index.tsx",
+  "dependencies": {
+    "loader-utils": "3.2.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-scripts": "5.0.1",
+    "@progress/kendo-react-grid": "11.4.0",
+    "@types/react-modal": "3.16.3",
+    "@progress/kendo-data-query": "1.7.0",
+    "@progress/kendo-theme-default": "11.3.2",
+    "@progress/kendo-react-data-tools": "11.4.0",
+    "@progress/kendo-react-common": "11.4.0",
+    "@progress/kendo-licensing": "1.7.1",
+    "@progress/kendo-react-buttons": "11.4.0",
+    "@progress/kendo-react-popup": "11.4.0",
+    "@progress/kendo-popup-common": "1.9.2",
+    "@progress/kendo-react-intl": "11.4.0",
+    "tslib": "2.8.1",
+    "@progress/kendo-intl": "3.1.2",
+    "@progress/kendo-react-animation": "11.4.0",
+    "@progress/kendo-webspeech-common": "1.0.1",
+    "@progress/kendo-react-inputs": "11.4.0",
+    "@progress/kendo-react-labels": "11.4.0",
+    "@progress/kendo-drawing": "1.21.2",
+    "@progress/kendo-react-layout": "11.4.0",
+    "react-transition-group": "4.4.5",
+    "@progress/kendo-react-progressbars": "11.4.0",
+    "@progress/kendo-inputs-common": "3.1.2",
+    "@progress/kendo-react-dialogs": "11.4.0",
+    "@progress/kendo-react-dropdowns": "11.4.0",
+    "@progress/kendo-react-treeview": "11.4.0",
+    "@progress/kendo-react-dateinputs": "11.4.0",
+    "@progress/kendo-date-math": "1.5.15",
+    "@progress/kendo-dateinputs-common": "0.4.6",
+    "@progress/kendo-react-indicators": "11.4.0",
+    "@progress/kendo-react-form": "11.4.0",
+    "axios": "1.11.0",
+    "@progress/kendo-react-conversational-ui": "11.4.0"
+  },
+  "devDependencies": {
+    "@types/react": "18.2.38",
+    "@types/react-dom": "18.2.15",
+    "typescript": "4.4.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
