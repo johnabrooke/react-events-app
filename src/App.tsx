@@ -1,5 +1,5 @@
 import "./styles.css";
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import { useEvents } from "./hooks";
 import {
   Grid,
@@ -21,46 +21,32 @@ const App: React.FC = () => {
     { field: "company", dir: "asc" }, // Set initial sort by company
   ]);
 
-  // Define the columns configuration inside a useMemo hook.
-  const columnsConfig = useMemo<GridColumnProps[]>(
-    () => [
-      { field: "name", title: "Event Name", width: "250px" },
-      { field: "company", title: "Company", width: "200px" },
-      { field: "description", title: "Description" },
-      {
-        field: "actions",
-        title: "Actions",
-        width: "120px",
-        // Define the cell renderer as an inline arrow function.
-        // It receives the cell props directly from the Grid.
-        cell: (props: GridCellProps) => (
-          <button
-            className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
-            onClick={() => {
-              if (
-                window.confirm(
-                  `Are you sure you want to delete "${props.dataItem.name}"?`
-                )
-              ) {
-                handleDeleteEvent(props.dataItem.id);
-              }
-            }}
-          >
-            Delete
-          </button>
-        ),
-      },
-    ],
-    [handleDeleteEvent] // The columns config will only be recalculated if handleDeleteEvent changes.
-  );
+  // Create a simple cell renderer function
+  const ActionCell = (props: GridCellProps) => {
+    return (
+      <td className={props.className}>
+        <button
+          className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
+          onClick={() => {
+            if (
+              window.confirm(
+                `Are you sure you want to delete "${props.dataItem.name}"?`
+              )
+            ) {
+              handleDeleteEvent(props.dataItem.id);
+            }
+          }}
+        >
+          Delete
+        </button>
+      </td>
+    );
+  };
 
-  // Define columns in an array of PROPS objects and manage them in state
-  // This is required for the `reorderable` prop to work correctly.
-  const [reorderableColumns, setReorderableColumns] =
-    useState<GridColumnProps[]>(columnsConfig);
-
+  // Define columns as JSX elements directly instead of using state
   const handleColumnReorder = (e: GridColumnReorderEvent) => {
-    setReorderableColumns(e.columns);
+    // You can handle column reordering here if needed
+    console.log("Columns reordered:", e.columns);
   };
 
   if (loading) return <div>⏳ Loading events...</div>;
@@ -86,9 +72,17 @@ const App: React.FC = () => {
         // Add the reorder handler
         onColumnReorder={handleColumnReorder}
       >
-        {reorderableColumns.map((col, idx) => (
-          <GridColumn {...col} key={idx} />
-        ))}
+        <GridColumn field="name" title="Event Name" width="250px" />
+        <GridColumn field="company" title="Company" width="200px" />
+        <GridColumn field="description" title="Description" />
+        <GridColumn
+          field="actions"
+          title="Actions"
+          width="120px"
+          cells={{
+            data: ActionCell,
+          }}
+        />
       </Grid>
     </div>
   );
