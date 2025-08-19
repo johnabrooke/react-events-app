@@ -6,39 +6,71 @@ import {
   GridColumn as GridColumn,
   GridCellProps,
   GridColumnReorderEvent,
-  GridColumnProps,
 } from "@progress/kendo-react-grid";
 import { orderBy, SortDescriptor } from "@progress/kendo-data-query";
 import "@progress/kendo-theme-default/dist/all.css";
 import { AddEventForm } from "./addEventForm";
+import { EventModal } from "./EventModal";
+import { Event } from "./event";
 
 const App: React.FC = () => {
   // Get data from events array
-  const { loading, error, events, handleAddEvent, handleDeleteEvent } =
-    useEvents();
+  const {
+    loading,
+    error,
+    events,
+    handleAddEvent,
+    handleUpdateEvent,
+    handleDeleteEvent,
+  } = useEvents();
 
   const [sort, setSort] = useState<SortDescriptor[]>([
     { field: "company", dir: "asc" }, // Set initial sort by company
   ]);
 
+  // Modal state
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Function to open modal with event details
+  const handleViewEvent = (event: Event) => {
+    setSelectedEvent(event);
+    setIsModalOpen(true);
+  };
+
+  // Function to close modal
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedEvent(null);
+  };
+
   // Create a simple cell renderer function
   const ActionCell = (props: GridCellProps) => {
     return (
       <td className={props.className}>
-        <button
-          className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
-          onClick={() => {
-            if (
-              window.confirm(
-                `Are you sure you want to delete "${props.dataItem.name}"?`
-              )
-            ) {
-              handleDeleteEvent(props.dataItem.id);
-            }
-          }}
-        >
-          Delete
-        </button>
+        <div className="action-buttons">
+          <button
+            className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-info"
+            onClick={() => handleViewEvent(props.dataItem)}
+            title="View event details"
+          >
+            View
+          </button>
+          <button
+            className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
+            onClick={() => {
+              if (
+                window.confirm(
+                  `Are you sure you want to delete "${props.dataItem.name}"?`
+                )
+              ) {
+                handleDeleteEvent(props.dataItem.id);
+              }
+            }}
+          >
+            Delete
+          </button>
+        </div>
       </td>
     );
   };
@@ -84,6 +116,13 @@ const App: React.FC = () => {
           }}
         />
       </Grid>
+
+      <EventModal
+        event={selectedEvent}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onSave={handleUpdateEvent}
+      />
     </div>
   );
 };

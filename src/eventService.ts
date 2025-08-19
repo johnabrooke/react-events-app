@@ -35,6 +35,23 @@ export const getEvents = async (): Promise<Event[]> => {
   return data;
 };
 
+// Update existing event
+export const updateEvent = async (event: Event): Promise<Event> => {
+  const response = await fetch(`${API_URL}${event.id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(event),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to update event on the server.");
+  }
+
+  return response.json(); // The server returns the updated event
+};
+
 // This function sends a DELETE request to remove an event by its ID
 export const deleteEvent = async (eventId: number): Promise<void> => {
   const response = await fetch(`${API_URL}${eventId}`, {

@@ -10,6 +10,11 @@ export const AddEventForm: React.FC<AddEventFormProps> = ({ onAddEvent }) => {
   const [description, setDescription] = useState("");
   const [company, setCompany] = useState("");
   const [color, setColor] = useState("red");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [image, setImage] = useState("");
+  const [isActive, setIsActive] = useState(true);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,7 +36,7 @@ export const AddEventForm: React.FC<AddEventFormProps> = ({ onAddEvent }) => {
       phone: "",
       address: "",
       image: "",
-      createdOn: "",
+      createdOn: new Date().toISOString(),
     };
 
     onAddEvent(newEvent);
@@ -41,53 +46,117 @@ export const AddEventForm: React.FC<AddEventFormProps> = ({ onAddEvent }) => {
     setDescription("");
     setCompany("");
     setColor("red");
-  };
-
-  // Basic styling for the form
-  const formStyle: React.CSSProperties = {
-    marginBottom: "2rem",
-    padding: "1rem",
-    border: "1px solid #ccc",
-    borderRadius: "8px",
-  };
-  const inputStyle: React.CSSProperties = {
-    display: "block",
-    width: "calc(100% - 10px)",
-    padding: "8px",
-    marginBottom: "10px",
+    setEmail("");
+    setPhone("");
+    setAddress("");
+    setImage("");
+    setIsActive(true);
   };
 
   return (
-    <form onSubmit={handleSubmit} style={formStyle}>
+    <form onSubmit={handleSubmit} className="form-container">
       <h2>Add New Event</h2>
-      <input
-        type="text"
-        placeholder="Event Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        style={inputStyle}
-      />
-      <input
-        type="text"
-        placeholder="Company"
-        value={company}
-        onChange={(e) => setCompany(e.target.value)}
-        style={inputStyle}
-      />
+
+      <div className="form-row">
+        <div className="form-col-half">
+          <input
+            type="text"
+            placeholder="Event Name *"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="form-input"
+            required
+          />
+        </div>
+        <div className="form-col-half">
+          <input
+            type="text"
+            placeholder="Company *"
+            value={company}
+            onChange={(e) => setCompany(e.target.value)}
+            className="form-input"
+            required
+          />
+        </div>
+      </div>
+
       <textarea
-        placeholder="Description"
+        placeholder="Description *"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
-        style={inputStyle}
+        className="form-textarea"
+        required
       />
+
+      <div className="form-row">
+        <div className="form-col-half">
+          <input
+            type="color"
+            value={color}
+            onChange={(e) => setColor(e.target.value)}
+            className="form-input"
+            title="Event Color"
+          />
+        </div>
+        <div className="form-col-half">
+          <div className="form-checkbox-container">
+            <input
+              type="checkbox"
+              id="isActive"
+              checked={isActive}
+              onChange={(e) => setIsActive(e.target.checked)}
+              className="form-checkbox"
+            />
+            <label htmlFor="isActive" className="form-checkbox-label">
+              Active Event
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div className="form-row">
+        <div className="form-col-half">
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="form-input"
+          />
+        </div>
+        <div className="form-col-half">
+          <input
+            type="tel"
+            placeholder="Phone"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            className="form-input"
+          />
+        </div>
+      </div>
+
       <input
         type="text"
-        placeholder="Color (e.g., red, #FF5733)"
-        value={color}
-        onChange={(e) => setColor(e.target.value)}
-        style={inputStyle}
+        placeholder="Address"
+        value={address}
+        onChange={(e) => setAddress(e.target.value)}
+        className="form-input"
       />
-      <button type="submit">Add Event</button>
+
+      <input
+        type="url"
+        placeholder="Image URL"
+        value={image}
+        onChange={(e) => setImage(e.target.value)}
+        className="form-input"
+      />
+
+      <button
+        type="submit"
+        className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
+      >
+        Add Event
+      </button>
     </form>
   );
 };

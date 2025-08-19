@@ -1,6 +1,6 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { Event } from "./event";
-import { getEvents, addEvent, deleteEvent } from "./eventService";
+import { getEvents, addEvent, updateEvent, deleteEvent } from "./eventService";
 
 export const useEvents = () => {
   const [events, setEvents] = useState<Event[]>([]);
@@ -32,6 +32,21 @@ export const useEvents = () => {
     }
   };
 
+  const handleUpdateEvent = async (updatedEvent: Event) => {
+    try {
+      const updatedEventFromServer = await updateEvent(updatedEvent);
+      // Update the event in the local state
+      setEvents((prevEvents) =>
+        prevEvents.map((event) =>
+          event.id === updatedEvent.id ? updatedEventFromServer : event
+        )
+      );
+    } catch (error) {
+      console.error("Failed to update event:", error);
+      // You might want to set an error state here to show the user
+    }
+  };
+
   const handleDeleteEvent = async (eventId: number) => {
     try {
       await deleteEvent(eventId);
@@ -45,5 +60,12 @@ export const useEvents = () => {
   };
 
   // Return the raw events and status. The component will handle sorting.
-  return { loading, error, events, handleAddEvent, handleDeleteEvent };
+  return {
+    loading,
+    error,
+    events,
+    handleAddEvent,
+    handleUpdateEvent,
+    handleDeleteEvent,
+  };
 };
