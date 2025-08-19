@@ -9,7 +9,7 @@ export const AddEventForm: React.FC<AddEventFormProps> = ({ onAddEvent }) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [company, setCompany] = useState("");
-  const [color, setColor] = useState("red");
+  const [color, setColor] = useState("#ff0000");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
@@ -18,24 +18,24 @@ export const AddEventForm: React.FC<AddEventFormProps> = ({ onAddEvent }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !company || !description || !color) {
-      alert("Name, Company, Description, and Color are required.");
+    if (!name || !company || !description) {
+      alert("Name, Company, and Description are required.");
       return;
     }
 
-    // Create a new event object, adding default values for fields not in the form
+    // Create a new event object
     const newEvent: Omit<Event, "id"> = {
       name,
       description,
       company,
       color,
+      email,
+      phone,
+      address,
+      image,
+      isActive,
       date: new Date().toISOString().split("T")[0],
       time: new Date().toLocaleTimeString("en-US", { hour12: false }),
-      isActive: true,
-      email: "",
-      phone: "",
-      address: "",
-      image: "",
       createdOn: new Date().toISOString(),
     };
 
@@ -45,7 +45,7 @@ export const AddEventForm: React.FC<AddEventFormProps> = ({ onAddEvent }) => {
     setName("");
     setDescription("");
     setCompany("");
-    setColor("red");
+    setColor("#ff0000");
     setEmail("");
     setPhone("");
     setAddress("");
@@ -90,13 +90,23 @@ export const AddEventForm: React.FC<AddEventFormProps> = ({ onAddEvent }) => {
 
       <div className="form-row">
         <div className="form-col-half">
-          <input
-            type="color"
-            value={color}
-            onChange={(e) => setColor(e.target.value)}
-            className="form-input"
-            title="Event Color"
-          />
+          <label className="field-label" htmlFor="color">
+            Event Color:
+          </label>
+          <div className="color-picker-container">
+            <input
+              type="color"
+              id="color"
+              value={color}
+              onChange={(e) => setColor(e.target.value)}
+              className="form-input"
+            />
+            <span
+              className="color-preview"
+              style={{ backgroundColor: color }}
+            ></span>
+            <span className="color-value">{color}</span>
+          </div>
         </div>
         <div className="form-col-half">
           <div className="form-checkbox-container">
