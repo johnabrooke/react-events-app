@@ -31,6 +31,12 @@
   display: block;
 }
 
+.field-label.required::after {
+  content: " *";
+  color: #dc3545;
+  font-weight: bold;
+}
+
 .field-value {
   color: #212529;
   margin-bottom: 10px;

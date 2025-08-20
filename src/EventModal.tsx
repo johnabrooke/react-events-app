@@ -26,6 +26,7 @@ export const EventModal: React.FC<EventModalProps> = ({
     }
   }, [event]);
 
+  // Early return if no data
   if (!event || !isOpen || !formData) {
     return null;
   }
@@ -38,16 +39,42 @@ export const EventModal: React.FC<EventModalProps> = ({
     if (formData) {
       // Validate required fields
       if (
-        !formData.name ||
-        !formData.description ||
-        !formData.company ||
-        !formData.color
+        !formData.name?.trim() ||
+        !formData.description?.trim() ||
+        !formData.company?.trim() ||
+        !formData.color?.trim()
       ) {
         alert("Name, Description, Company, and Color are required.");
         return;
       }
 
-      onSave(formData);
+      // Validate email format if provided
+      if (formData.email && !/\S+@\S+\.\S+/.test(formData.email)) {
+        alert("Please enter a valid email address.");
+        return;
+      }
+
+      // Validate image URL format if provided
+      if (formData.image && !/^https?:\/\/.+/.test(formData.image)) {
+        alert(
+          "Please enter a valid image URL (must start with http:// or https://)."
+        );
+        return;
+      }
+
+      // Trim string values before saving
+      const cleanedData = {
+        ...formData,
+        name: formData.name.trim(),
+        description: formData.description.trim(),
+        company: formData.company.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        address: formData.address.trim(),
+        image: formData.image.trim(),
+      };
+
+      onSave(cleanedData);
       setIsEditing(false);
     }
   };
@@ -78,14 +105,19 @@ export const EventModal: React.FC<EventModalProps> = ({
       | "date"
       | "time"
       | "color"
-      | "checkbox" = "text"
+      | "checkbox" = "text",
+    required: boolean = false
   ) => {
+    // Ensure formData is not null
+    if (!formData) return null;
+
     const value = formData[field];
+    const labelClass = required ? "field-label required" : "field-label";
 
     if (field === "id") {
       return (
         <div>
-          <label className="field-label">{label}:</label>
+          <label className={labelClass}>{label}:</label>
           <div className="field-value">{value}</div>
         </div>
       );
@@ -95,7 +127,7 @@ export const EventModal: React.FC<EventModalProps> = ({
       if (field === "isActive") {
         return (
           <div>
-            <label className="field-label">{label}:</label>
+            <label className={labelClass}>{label}:</label>
             <div className="field-value">
               <input
                 type="checkbox"
@@ -112,7 +144,7 @@ export const EventModal: React.FC<EventModalProps> = ({
       if (field === "color") {
         return (
           <div>
-            <label className="field-label">{label}:</label>
+            <label className={labelClass}>{label}:</label>
             <div className="field-value">
               <span
                 className="color-indicator"
@@ -127,7 +159,7 @@ export const EventModal: React.FC<EventModalProps> = ({
       if (field === "email" && value) {
         return (
           <div>
-            <label className="field-label">{label}:</label>
+            <label className={labelClass}>{label}:</label>
             <div className="field-value">
               <a href={`mailto:${value}`}>{value as string}</a>
             </div>
@@ -138,7 +170,7 @@ export const EventModal: React.FC<EventModalProps> = ({
       if (field === "phone" && value) {
         return (
           <div>
-            <label className="field-label">{label}:</label>
+            <label className={labelClass}>{label}:</label>
             <div className="field-value">
               <a href={`tel:${value}`}>{value as string}</a>
             </div>
@@ -149,7 +181,7 @@ export const EventModal: React.FC<EventModalProps> = ({
       if (field === "date") {
         return (
           <div>
-            <label className="field-label">{label}:</label>
+            <label className={labelClass}>{label}:</label>
             <div className="field-value">{formatDate(value as string)}</div>
           </div>
         );
@@ -158,7 +190,7 @@ export const EventModal: React.FC<EventModalProps> = ({
       if (field === "createdOn") {
         return (
           <div>
-            <label className="field-label">{label}:</label>
+            <label className={labelClass}>{label}:</label>
             <div className="field-value">
               {value ? formatDate(value as string) : "Not specified"}
             </div>
@@ -168,7 +200,7 @@ export const EventModal: React.FC<EventModalProps> = ({
 
       return (
         <div>
-          <label className="field-label">{label}:</label>
+          <label className={labelClass}>{label}:</label>
           <div className="field-value">
             {(value as string) || "Not specified"}
           </div>
@@ -194,10 +226,34 @@ export const EventModal: React.FC<EventModalProps> = ({
       );
     }
 
+    if (type === "color") {
+      return (
+        <div>
+          <label className={labelClass} htmlFor={field}>
+            {label}:
+          </label>
+          <div className="color-picker-container">
+            <input
+              type="color"
+              id={field}
+              value={value as string}
+              onChange={(e) => handleInputChange(field, e.target.value)}
+              className="form-input"
+            />
+            <span
+              className="color-preview"
+              style={{ backgroundColor: value as string }}
+            ></span>
+            <span className="color-value">{value as string}</span>
+          </div>
+        </div>
+      );
+    }
+
     if (type === "textarea") {
       return (
         <div>
-          <label className="field-label" htmlFor={field}>
+          <label className={labelClass} htmlFor={field}>
             {label}:
           </label>
           <textarea
@@ -213,7 +269,7 @@ export const EventModal: React.FC<EventModalProps> = ({
 
     return (
       <div>
-        <label className="field-label" htmlFor={field}>
+        <label className={labelClass} htmlFor={field}>
           {label}:
         </label>
         <input
@@ -241,10 +297,10 @@ export const EventModal: React.FC<EventModalProps> = ({
           <h3>Basic Information</h3>
 
           {renderField("ID", "id")}
-          {renderField("Event Name", "name")}
-          {renderField("Company", "company")}
-          {renderField("Description", "description", "textarea")}
-          {renderField("Color", "color", "color")}
+          {renderField("Event Name", "name", "text", true)}
+          {renderField("Company", "company", "text", true)}
+          {renderField("Description", "description", "textarea", true)}
+          {renderField("Color", "color", "color", true)}
           {renderField("Active Status", "isActive", "checkbox")}
         </div>
 
